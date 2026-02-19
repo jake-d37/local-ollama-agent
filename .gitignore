@@ -1,8 +1,11 @@
-# Ignore everything in outputs folder
+# Ignore everything in outputs folder (including the folder)
 outputs/
 
 # Ignore everything in skills folder
 skills/*
+
+# Ignore everything in knowledge folder
+knowledge/*
 
 # But keep files that contain ".example." in their name
 !skills/*.example.*

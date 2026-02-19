@@ -39,3 +39,4 @@ Haven't worked this out yet
 - Ollama can call public functions from scripts in the repo
     - You can add your own functions that can be called by the agent by adding to the skills folder. 
 - Customisable personality system prompt 
+- Knowledge bases that you can call on per session (or not at all)
