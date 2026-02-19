@@ -40,3 +40,5 @@ Haven't worked this out yet
     - You can add your own functions that can be called by the agent by adding to the skills folder. 
 - Customisable personality system prompt 
 - Knowledge bases that you can call on per session (or not at all)
+- Possibility to send HTTP request to this and run that through Ollama
+    - Can act as your home server to call from your phone etc.
