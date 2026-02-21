@@ -80,6 +80,13 @@ printf "\n${C_DIM}  Paste or type your message."
 printf " Press ${RESET}${C_ACCENT}Enter${RESET}${C_DIM} twice to send."
 printf " Type ${RESET}${C_WARN}exit${RESET}${C_DIM} to quit.${RESET}\n\n"
 
+# ---- Readline bindings for word navigation ----
+# These map the escape sequences macOS sends for option+arrow
+bind '"\e[1;3C": forward-word'  2>/dev/null   # option+right
+bind '"\e[1;3D": backward-word' 2>/dev/null   # option+left
+bind '"\ef": forward-word'      2>/dev/null   # alt+f fallback
+bind '"\eb": backward-word'     2>/dev/null   # alt+b fallback
+
 # ---- Conversation history (JSON array) ----
 MESSAGES="[]"
 
@@ -99,21 +106,31 @@ spinner() {
 # ─────────────────────────────────────────────
 while true; do
 
-  # ── Multiline user input ─────────────────────────────────────────
-  printf "${C_USER}${BOLD}  you  ${RESET}${C_BORDER}▸${RESET} "
-
+  # ── Multiline user input with readline editing ───────────────────
+  # read -e enables readline: arrow keys, ctrl+a/e, option+arrow, etc.
+  # Each line is edited independently; blank line submits.
   USER_PROMPT=""
   FIRST_LINE=true
 
-  while IFS= read -r input_line; do
-    if [[ -z "$input_line" ]]; then
-      break
-    fi
+  while true; do
     if [[ "$FIRST_LINE" == true ]]; then
+      PROMPT_STR="$(printf "${C_USER}${BOLD}  you  ${RESET}${C_BORDER}▸${RESET} ")"
       FIRST_LINE=false
     else
-      printf "         ${C_DIM}·${RESET} "
+      PROMPT_STR="$(printf "         ${C_DIM}·${RESET} ")"
     fi
+
+    IFS= read -r -e -p "$PROMPT_STR" input_line
+    READ_STATUS=$?
+
+    # EOF (ctrl+d) or blank line = submit
+    if [[ $READ_STATUS -ne 0 || -z "$input_line" ]]; then
+      break
+    fi
+
+    # Add to readline history so up-arrow recalls previous lines
+    history -s "$input_line"
+
     [[ -n "$USER_PROMPT" ]] && USER_PROMPT+=$'\n'
     USER_PROMPT+="$input_line"
   done
