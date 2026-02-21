@@ -23,7 +23,9 @@ printf "Model: %s\nStarted: %s\n\n" "$MODEL" "$(date)" > "$OUTPUT_FILE"
 draw_header
 
 # ---- Conversation history (JSON array) ----
-MESSAGES="[]"
+SYSTEM_PROMPT=$(cat "$SYSTEM_PROMPT_PATH")
+MESSAGES=$(jq -n --arg content "$SYSTEM_PROMPT" \
+  '[{"role":"system","content":$content}]')
 
 # ─────────────────────────────────────────────
 #  Main loop
