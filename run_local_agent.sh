@@ -104,11 +104,12 @@ while true; do
   wait "$SPINNER_PID" 2>/dev/null
   printf "\r\033[K"
 
-  # ── Print response ───────────────────────────────────────────────
+  # Check if any tools were called
+  parse_and_dispatch "$FULL_RESPONSE"
+
   printf "\n  ${C_ASSISTANT}${BOLD}agent${RESET}${C_BORDER} ▸${RESET}\n\n"
   printf '    %s\n' "$FULL_RESPONSE"
 
-  # ── Divider ──────────────────────────────────────────────────────
   printf "\n${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
 
   # Append to history and log
