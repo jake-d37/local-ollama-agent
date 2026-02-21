@@ -11,6 +11,17 @@ while [[ "$#" -gt 0 ]]; do
       fi
       exit 0
       ;;
+    --sysprompt)
+      SYSTEM_PROMPT_PATH="$2"
+      # Resolve relative path against current directory
+      if [[ -f "$SYSTEM_PROMPT_PATH" ]]; then
+        SYSTEM_PROMPT_PATH="$(realpath "$SYSTEM_PROMPT_PATH")"
+      else
+        printf "${C_WARN}✗ System prompt file not found: %s${RESET}\n" "$SYSTEM_PROMPT_PATH"
+        exit 1
+      fi
+      shift 2
+      ;;
     *)
       printf "${C_WARN}✗ Unknown parameter: %s${RESET}\n" "$1"
       exit 1
