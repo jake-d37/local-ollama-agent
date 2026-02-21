@@ -1,13 +1,13 @@
-# Ignore everything in outputs folder (including the folder)
-outputs/
-
-# Ignore everything in skills folder
+outputs/*
 skills/*
-
-# Ignore everything in knowledge folder
 knowledge/*
+tools/*
 
 resources/*.conf
 
-# But keep files that contain ".example." in their name
+skills_report.txt
+
+.DS_Store
+
+# Keep files that contain ".example." in their name
 !*.example.*

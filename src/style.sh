@@ -10,6 +10,7 @@ C_ASSISTANT="\033[38;5;150m"
 C_DIM="\033[38;5;238m"
 C_ACCENT="\033[38;5;117m"
 C_WARN="\033[38;5;203m"
+C_DISPATCH="\033[38;5;178m"
 
 # ---- Box drawing ----
 TL="╭" TR="╮" BL="╰" BR="╯" H="─" V="│"

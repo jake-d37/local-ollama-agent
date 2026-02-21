@@ -15,6 +15,7 @@ OUTPUT_FILE="outputs/ollama_output_$TIMESTAMP.txt"
 source "$SCRIPTS_DIR/style.sh"
 source "$SCRIPTS_DIR/print-helpers.sh"
 source "$SCRIPTS_DIR/parse-args.sh"
+source "$SCRIPTS_DIR/dispatch.sh"
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
@@ -22,9 +23,22 @@ printf "Model: %s\nStarted: %s\n\n" "$MODEL" "$(date)" > "$OUTPUT_FILE"
 
 draw_header
 
-# ---- Conversation history (JSON array) ----
+CAN_USE_TOOLS=false
+
+SYSPROMPT_PREFACE=$(cat "$RESOURCES_DIR/sysprompt-preface.txt")
 SYSTEM_PROMPT=$(cat "$SYSTEM_PROMPT_PATH")
-MESSAGES=$(jq -n --arg content "$SYSTEM_PROMPT" \
+SYSTEM_PROMPT="${SYSPROMPT_PREFACE}"$'\n\n'"${SYSTEM_PROMPT}"
+
+if [[ -f "$SKILLS_REPORT_PATH/skills_report.txt" ]]; then
+  SKILLS_REPORT=$(cat "$SKILLS_REPORT_PATH/skills_report.txt")
+  CAN_USE_TOOLS=true
+  SYSTEM_PROMPT="${SYSTEM_PROMPT}"$'\n\n'"${SKILLS_REPORT}"
+else
+  print_warning "No ${SKILL_REPORT_PATH}/skills_report.txt found — agent will not be able to call any tools. Run ./generate_skills_report.sh to generate one."
+fi
+
+# ---- Conversation history (JSON array) ----
+MESSAGES=$(jq -n --arg content "## System-prompt: \n$SYSTEM_PROMPT\n ## User prompt:\n" \
   '[{"role":"system","content":$content}]')
 
 # ─────────────────────────────────────────────
@@ -104,12 +118,15 @@ while true; do
   wait "$SPINNER_PID" 2>/dev/null
   printf "\r\033[K"
 
-  # ── Print response ───────────────────────────────────────────────
-  printf "\n  ${C_ASSISTANT}${BOLD}agent${RESET}${C_BORDER} ▸${RESET}\n\n"
-  printf '    %s\n' "$FULL_RESPONSE"
+  # Check if any tools were called
+  DISPLAY_RESPONSE=$(echo "$FULL_RESPONSE" | sed 's/\[CALL:[^]]*\]//g' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
-  # ── Divider ──────────────────────────────────────────────────────
-  printf "\n${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
+  printf "\n  ${C_ASSISTANT}${BOLD}agent${RESET}${C_BORDER} ▸${RESET}\n\n"
+  printf '    %s\n\n' "$DISPLAY_RESPONSE"
+
+  parse_and_dispatch "$FULL_RESPONSE"
+
+  printf "\n${RESET}${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
 
   # Append to history and log
   MESSAGES=$(echo "$MESSAGES" | jq --arg content "$FULL_RESPONSE" \

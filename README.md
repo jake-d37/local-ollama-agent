@@ -85,15 +85,46 @@ You can reset the default system prompt by updating `SYSTEM_PROMPT_PATH` in `res
 
 Each session is automatically saved to an `outputs/` directory with a timestamped filename (`ollama_output_YYYYMMDD_HHMMSS.txt`), so you always have a record of your conversations.
 
-## How to add skills
+## Tools
 
-Drop scripts into the `skills/` folder. This system is still being developed — see next steps below.
+Any Python scripts placed in your tools directory can be called by the agent as tools. The tools directory defaults to `~/tools/` but can be changed by setting `TOOLS_DIR` in `resources/config.conf`.
+
+For the agent to understand what tools are available, each function needs a docstring describing what it does. The program reads these docstrings to generate a **skills report** — a plain text summary of all callable functions — which is passed to the agent as part of its system prompt at the start of each session.
+
+### Writing a tool
+
+Add a docstring to any public function in your tool scripts:
+
+```python
+def mkdir(name: str):
+    """Creates a directory with the given name in the current working directory.
+    Example: [CALL:mkdir(my_folder)]
+    """
+    os.makedirs(name, exist_ok=True)
+```
+
+### Generating the skills report
+
+After adding or updating any tool scripts, run this from the project root:
+
+```bash
+./generate_skills_report.sh
+```
+
+This scrapes the docstrings from all Python scripts in your tools directory and writes the result to `skills_report.txt` in the project root. Re-run it any time you make changes to your tools.
+
+> **Warning:** If no skills report is present, the agent will have no knowledge of available tools and will not be able to call any of them. You'll see a warning at the start of the session if this is the case.
 
 ## Next steps
 
-- Ollama can call public functions from scripts in the repo
-    - You can add your own functions that can be called by the agent by adding to the skills folder.
-- Customisable personality system prompt
+- Create a "call queue"
+    - tool calling should run on a loop with the following structure
+        - add call event to queue
+        - run current call event
+        - wait for response
+        - evaluate whether there was an error, or whether next call should be run
+- Ask permission to add something to the call queue
+- Embedded knowledge base on local system 
 - Knowledge bases that you can call on per session (or not at all)
 - Embed previous conversations in memory for future reference
     - Include `--ignore` tag to ensure this isn't inclulded in memory
