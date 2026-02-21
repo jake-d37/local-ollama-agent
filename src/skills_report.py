@@ -13,13 +13,24 @@ import os
 import sys
 
 
+TOOL_CALLING_RULES = """
+TOOL CALLING RULES — follow these strictly:
+- NEVER call a tool unless the user has explicitly asked you to perform that operation.
+- NEVER call tools in a greeting, example, or to demonstrate capability.
+- NEVER call tools speculatively or as a suggestion of what could be done.
+- If you are unsure whether the user wants an action performed, ask first.
+- A user saying "hello" or asking a question is never a reason to call a tool.
+- NEVER call a tool to explain or demonstrate what it does. If a user asks what tools are available or what a tool does, describe it in plain text only.
+""".strip()
+
+
 def parse_tools(tools_dir: str) -> list[tuple[str, str, str]]:
     """Return a list of (name, signature, docstring) for every public function
     found across all .py files in tools_dir."""
     entries = []
 
     for fname in sorted(os.listdir(tools_dir)):
-        if not fname.endswith(".py"):
+        if not fname.endswith(".py") or fname.endswith(".example.py"):
             continue
 
         fpath = os.path.join(tools_dir, fname)
@@ -91,6 +102,8 @@ def render_report(entries: list[tuple[str, str, str]]) -> None:
                 stripped = line.strip()
                 print(f"    {stripped}" if stripped else "")
         print()
+
+    print(TOOL_CALLING_RULES)
 
 
 def main() -> None:

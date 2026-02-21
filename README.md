@@ -117,8 +117,13 @@ This scrapes the docstrings from all Python scripts in your tools directory and 
 
 ## Next steps
 
-- Ollama can call public functions from scripts in the repo
-    - You can add your own functions that can be called by the agent by adding to the skills folder.
+- Create a "call queue"
+    - tool calling should run on a loop with the following structure
+        - add call event to queue
+        - run current call event
+        - wait for response
+        - evaluate whether there was an error, or whether next call should be run
+- Embedded knowledge base on local system 
 - Knowledge bases that you can call on per session (or not at all)
 - Embed previous conversations in memory for future reference
     - Include `--ignore` tag to ensure this isn't inclulded in memory

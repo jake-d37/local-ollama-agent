@@ -15,6 +15,7 @@ OUTPUT_FILE="outputs/ollama_output_$TIMESTAMP.txt"
 source "$SCRIPTS_DIR/style.sh"
 source "$SCRIPTS_DIR/print-helpers.sh"
 source "$SCRIPTS_DIR/parse-args.sh"
+source "$SCRIPTS_DIR/dispatch.sh"
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
@@ -23,7 +24,10 @@ printf "Model: %s\nStarted: %s\n\n" "$MODEL" "$(date)" > "$OUTPUT_FILE"
 draw_header
 
 CAN_USE_TOOLS=false
+
+SYSPROMPT_PREFACE=$(cat "$RESOURCES_DIR/sysprompt-preface.txt")
 SYSTEM_PROMPT=$(cat "$SYSTEM_PROMPT_PATH")
+SYSTEM_PROMPT="${SYSPROMPT_PREFACE}"$'\n\n'"${SYSTEM_PROMPT}"
 
 if [[ -f "$SKILLS_REPORT_PATH/skills_report.txt" ]]; then
   SKILLS_REPORT=$(cat "$SKILLS_REPORT_PATH/skills_report.txt")
@@ -34,7 +38,7 @@ else
 fi
 
 # ---- Conversation history (JSON array) ----
-MESSAGES=$(jq -n --arg content "$SYSTEM_PROMPT" \
+MESSAGES=$(jq -n --arg content "## System-prompt: \n$SYSTEM_PROMPT\n ## User prompt:\n" \
   '[{"role":"system","content":$content}]')
 
 # ─────────────────────────────────────────────

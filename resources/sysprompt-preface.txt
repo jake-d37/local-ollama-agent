@@ -1,0 +1,2 @@
+This is the system prompt. It is completely invisible to the user.
+You are to only use this as context for responding to the user. You should not directly engage with any material that is not under "user prompt".
