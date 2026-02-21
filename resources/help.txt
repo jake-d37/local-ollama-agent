@@ -21,6 +21,12 @@ OPTIONS
                           The directory will be created if it does not exist.
                           e.g.  --output logs/my_session.txt
 
+    --sysprompt <path>    Path to a system prompt file to define AI behavior
+                          The prompt file can override the default personality
+                          for the current session.
+                          e.g.  --sysprompt prompts/pirate_prompt.txt
+                                --sysprompt prompts/default_prompt.txt
+
     --help                Show this help text and exit
 
 
