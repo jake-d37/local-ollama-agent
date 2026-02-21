@@ -7,5 +7,7 @@ skills/*
 # Ignore everything in knowledge folder
 knowledge/*
 
+resources/*.conf
+
 # But keep files that contain ".example." in their name
-!skills/*.example.*
+!*.example.*
