@@ -10,3 +10,8 @@ print_bottom() {
   local width="${1:-60}"
   printf "${C_BORDER}%s%s%s${RESET}\n" "$BL" "$(repeat_char "$H" $((width - 2)))" "$BR"
 }
+
+print_warning() {
+  local message="$1"
+  printf "${C_WARN}  ⚠  %s${RESET}\n\n" "$message"
+}

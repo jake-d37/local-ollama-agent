@@ -22,8 +22,18 @@ printf "Model: %s\nStarted: %s\n\n" "$MODEL" "$(date)" > "$OUTPUT_FILE"
 
 draw_header
 
-# ---- Conversation history (JSON array) ----
+CAN_USE_TOOLS=false
 SYSTEM_PROMPT=$(cat "$SYSTEM_PROMPT_PATH")
+
+if [[ -f "$SKILLS_REPORT_PATH/skills_report.txt" ]]; then
+  SKILLS_REPORT=$(cat "$SKILLS_REPORT_PATH/skills_report.txt")
+  CAN_USE_TOOLS=true
+  SYSTEM_PROMPT="${SYSTEM_PROMPT}"$'\n\n'"${SKILLS_REPORT}"
+else
+  print_warning "No ${SKILL_REPORT_PATH}/skills_report.txt found — agent will not be able to call any tools. Run ./generate_skills_report.sh to generate one."
+fi
+
+# ---- Conversation history (JSON array) ----
 MESSAGES=$(jq -n --arg content "$SYSTEM_PROMPT" \
   '[{"role":"system","content":$content}]')
 

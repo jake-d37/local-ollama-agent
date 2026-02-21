@@ -13,5 +13,5 @@ if [[ ! -d "$TOOLS_DIR" ]]; then
   exit 1
 fi
 
-python3 "$PROJECT_ROOT/src/skills_report.py" "$TOOLS_DIR" > "$PROJECT_ROOT/skills_report.txt"
-echo "Report written to $PROJECT_ROOT/skills_report.txt"
+python3 "$PROJECT_ROOT/src/skills_report.py" "$TOOLS_DIR" > "$SKILLS_REPORT_PATH/skills_report.txt"
+echo "Report written to $SKILLS_REPORT_PATH/skills_report.txt"

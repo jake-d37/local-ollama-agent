@@ -11,6 +11,8 @@ parse_and_dispatch() {
       return 1
     fi
 
+    printf "  ${C_DISPATCH}${BOLD}[dispatch]${RESET} ${C_DISPATCH}Calling tool: %s(%s)${RESET}\n" "$func" "$raw_args"
+
     # Split args on comma
     IFS=',' read -ra args <<< "$raw_args"
 
