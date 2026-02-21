@@ -119,13 +119,14 @@ while true; do
   printf "\r\033[K"
 
   # Check if any tools were called
-  parse_and_dispatch "$FULL_RESPONSE"
   DISPLAY_RESPONSE=$(echo "$FULL_RESPONSE" | sed 's/\[CALL:[^]]*\]//g' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
   printf "\n  ${C_ASSISTANT}${BOLD}agent${RESET}${C_BORDER} ▸${RESET}\n\n"
-  printf '    %s\n' "$DISPLAY_RESPONSE"
+  printf '    %s\n\n' "$DISPLAY_RESPONSE"
 
-  printf "\n${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
+  parse_and_dispatch "$FULL_RESPONSE"
+
+  printf "\n${RESET}${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
 
   # Append to history and log
   MESSAGES=$(echo "$MESSAGES" | jq --arg content "$FULL_RESPONSE" \
