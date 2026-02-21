@@ -2,6 +2,7 @@ outputs/*
 skills/*
 knowledge/*
 tools/*
+system-prompts/*
 
 resources/*.conf
 
@@ -11,3 +12,5 @@ skills_report.txt
 
 # Keep files that contain ".example." in their name
 !*.example.*
+
+!system-prompts/_default.txt
