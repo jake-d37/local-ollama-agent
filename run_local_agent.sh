@@ -120,9 +120,10 @@ while true; do
 
   # Check if any tools were called
   parse_and_dispatch "$FULL_RESPONSE"
+  DISPLAY_RESPONSE=$(echo "$FULL_RESPONSE" | sed 's/\[CALL:[^]]*\]//g' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
   printf "\n  ${C_ASSISTANT}${BOLD}agent${RESET}${C_BORDER} ▸${RESET}\n\n"
-  printf '    %s\n' "$FULL_RESPONSE"
+  printf '    %s\n' "$DISPLAY_RESPONSE"
 
   printf "\n${C_DIM}  $(repeat_char "╌" $((W - 4)))${RESET}\n\n"
 

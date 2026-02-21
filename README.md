@@ -123,6 +123,7 @@ This scrapes the docstrings from all Python scripts in your tools directory and 
         - run current call event
         - wait for response
         - evaluate whether there was an error, or whether next call should be run
+- Ask permission to add something to the call queue
 - Embedded knowledge base on local system 
 - Knowledge bases that you can call on per session (or not at all)
 - Embed previous conversations in memory for future reference
