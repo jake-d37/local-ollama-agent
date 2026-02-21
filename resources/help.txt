@@ -1,0 +1,87 @@
+◈  LOCAL OLLAMA AGENT — HELP
+ ──────────────────────────────────────────────────────────
+
+
+USAGE
+
+    ./run_local_agent.sh [OPTIONS]
+
+
+OPTIONS
+
+    --model  <name>       Model to use for chat (default: mistral)
+                          Any model available in your local Ollama
+                          installation can be passed here.
+                          e.g.  --model qwen2.5:14b
+                                --model llama3
+                                --model codellama
+
+    --output <path>       Path to save the session log
+                          (default: outputs/ollama_output_<timestamp>.txt)
+                          The directory will be created if it does not exist.
+                          e.g.  --output logs/my_session.txt
+
+    --help                Show this help text and exit
+
+
+SENDING MESSAGES
+
+    Type your message at the  you ▸  prompt and press Enter.
+    For multiline messages, press Enter at the end of each line.
+    Press Enter on a blank line to submit your message.
+    Type  exit  and press Enter to end the session.
+
+
+TEXT EDITING
+
+    The input prompt supports full readline editing. The following
+    shortcuts are available while typing your message:
+
+    Navigation
+      ←  /  →              Move one character left / right
+      Option + ←           Jump one word to the left   (macOS)
+      Option + →           Jump one word to the right  (macOS)
+      Alt + B              Jump one word to the left   (Linux / iTerm2)
+      Alt + F              Jump one word to the right  (Linux / iTerm2)
+      Ctrl + A             Jump to the start of the line
+      Ctrl + E             Jump to the end of the line
+
+    Editing
+      Backspace            Delete character to the left
+      Ctrl + W             Delete the word to the left
+      Ctrl + U             Delete from cursor to start of line
+      Ctrl + K             Delete from cursor to end of line
+      Ctrl + Y             Paste last deleted text (yank)
+
+    History
+      ↑  /  ↓              Scroll through previously entered lines
+      Ctrl + R             Search input history interactively
+
+    Other
+      Ctrl + D             Submit / signal end of input (same as blank Enter)
+      Ctrl + C             Cancel current input and start a new prompt
+      
+
+SESSION LOG
+
+    All messages are saved automatically to the output file.
+    The log records the model name, session start time, and the
+    full content of every user and assistant message in plain text.
+
+
+EXAMPLES
+
+    Run with the default model (set up in resources/config.conf):
+      ./run_local_agent.sh
+
+    Run with a different model:
+      ./run_local_agent.sh --model llama3
+
+    Run with a custom log path:
+      ./run_local_agent.sh --output ~/logs/session.txt
+
+    Run with both options:
+      ./run_local_agent.sh --model codellama --output ~/logs/code_session.txt
+
+
+ ──────────────────────────────────────────────────────────
