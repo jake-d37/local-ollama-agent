@@ -5,7 +5,6 @@ import sys
 
 def mkdir(name: str):
     """Creates a directory with the given name in the current working directory.
-    Example: [CALL:mkdir(my_folder)]
     """
     os.makedirs(name, exist_ok=True)
     print(f"Created directory: {os.path.join(os.getcwd(), name)}")

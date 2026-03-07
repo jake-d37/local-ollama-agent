@@ -130,6 +130,8 @@ This scrapes the docstrings from all Python scripts in your tools directory and 
     - Include `--ignore` tag to ensure this isn't inclulded in memory
 - Possibility to send HTTP request to this and run that through Ollama
     - Can act as your home server to call from your phone etc.
+- Add / commands that the user can call in the terminal
+    - start with /clear and /compact
 
 ### Next steps (project maintainability)
 

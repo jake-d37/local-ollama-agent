@@ -14,13 +14,11 @@ import sys
 
 
 TOOL_CALLING_RULES = """
-TOOL CALLING RULES — follow these strictly:
-- NEVER call a tool unless the user has explicitly asked you to perform that operation.
-- NEVER call tools in a greeting, example, or to demonstrate capability.
-- NEVER call tools speculatively or as a suggestion of what could be done.
-- If you are unsure whether the user wants an action performed, ask first.
-- A user saying "hello" or asking a question is never a reason to call a tool.
-- NEVER call a tool to explain or demonstrate what it does. If a user asks what tools are available or what a tool does, describe it in plain text only.
+Rules:
+- If a tool is available that is relevant to the user's request, use it.
+- Prefer tools over answering from memory when a tool can do the job more reliably.
+- Never call tools to greet, demonstrate, or speculate.
+- If unsure whether a tool applies, use it.
 """.strip()
 
 
@@ -87,21 +85,16 @@ def build_signature(args: ast.arguments) -> str:
 
 def render_report(entries: list[tuple[str, str, str]]) -> None:
     """Print the formatted skills report to stdout."""
-    print("You have access to the following tools. To call a tool, emit a line in")
-    print("this exact format anywhere in your response:")
-    print()
+    print("## Tools:")
+    print("To call a tool, emit exactly:")
     print("  [CALL:function_name(arg1,arg2)]")
-    print()
-    print("Available tools:")
     print()
 
     for name, sig, doc in entries:
-        print(f"  {name}({sig})")
-        if doc:
-            for line in doc.splitlines():
-                stripped = line.strip()
-                print(f"    {stripped}" if stripped else "")
-        print()
+        # Take only the first line of the docstring as a short description
+        short_doc = doc.splitlines()[0].strip() if doc else ""
+        suffix = f" — {short_doc}" if short_doc else ""
+        print(f"  {name}({sig}){suffix}")
 
     print(TOOL_CALLING_RULES)
 

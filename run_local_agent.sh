@@ -16,6 +16,7 @@ source "$SCRIPTS_DIR/style.sh"
 source "$SCRIPTS_DIR/print-helpers.sh"
 source "$SCRIPTS_DIR/parse-args.sh"
 source "$SCRIPTS_DIR/dispatch.sh"
+source "$SCRIPTS_DIR/debug.sh"
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
@@ -40,6 +41,9 @@ fi
 # ---- Conversation history (JSON array) ----
 MESSAGES=$(jq -n --arg content "## System-prompt: \n$SYSTEM_PROMPT\n ## User prompt:\n" \
   '[{"role":"system","content":$content}]')
+
+# ── Trap: dump full prompt on any exit ──────────────────────────────
+trap dump_prompt EXIT
 
 # ─────────────────────────────────────────────
 #  Main loop
